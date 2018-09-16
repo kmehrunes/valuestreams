@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Objects;
 import java.util.function.Function;
 
@@ -21,6 +22,14 @@ public class DateValue extends AbstractValue<Date> {
         return new DateValue(value);
     }
 
+    public static DateValue of(int day, int month, int year) {
+        return new DateValue(new GregorianCalendar(year, month, day).getTime());
+    }
+
+    public static DateValue of(int day, Month month, int year) {
+        return new DateValue(new GregorianCalendar(year, month.getValue(), day).getTime());
+    }
+
     public static DateValue empty() {
         return new DateValue();
     }
@@ -30,8 +39,10 @@ public class DateValue extends AbstractValue<Date> {
     }
 
     public DateValue validate(Function<Date, Boolean> validator) {
-        if (isEmpty() && !validator.apply(value)) {
-            value = null;
+        if (isPresent()) {
+            if (!validator.apply(value)) {
+                value = null;
+            }
         }
 
         return this;
