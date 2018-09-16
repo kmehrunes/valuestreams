@@ -1,6 +1,7 @@
 # valuestreams
 
 [![Build Status](https://travis-ci.org/kmehrunes/valuestreams.svg?branch=master)](https://travis-ci.org/kmehrunes/valuestreams)
+[![](https://jitpack.io/v/kmehrunes/valuestreams.svg)](https://jitpack.io/#kmehrunes/valuestreams)
 
 A set of some optional-like value wrappers which provide more validation and mapping options. This project was created just for fun, but turned out to be quite convienent so I decided to share it. May it serve you in the projects to come.
 
@@ -12,6 +13,24 @@ A: IDK, couldn't think of a better name.
 
 **Q: Why would I use this?**
 A: IDK. It's a bit more convenient though. Also unlike `Optional`, those implementations don't create a new instance with every operation; pretty much everything is done in-place.
+
+## Dependency
+```xml
+<repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+</repositories>
+
+<dependencies>
+        <dependency>
+	    <groupId>com.github.kmehrunes</groupId>
+	    <artifactId>valuestreams</artifactId>
+	    <version>v0.1</version>
+	</dependency>
+</dependencies>
+```
 
 ## Overview
 The provided classes expose an interface which is similar in a way to optional values. They allow applying a series of operations on a wrapped value. The provided classes are:
@@ -84,8 +103,13 @@ DoubleValue.of(-45.3)
 
 - Date values
 ```java
-DateValue.of(someDate)
+/*
+ * create a date value for 5th of May 2011, validate 
+ * the month, and check that the date is in the past.
+ */
+DateValue.of(5, Month.MAY, 2011)
          .inMonth(Month.MAY)
          .isBefore(someOtherDate)
+         .past()
          .getValueOrThrow(Exception.class, "Invalid date");
 ```
