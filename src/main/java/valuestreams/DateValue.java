@@ -1,5 +1,7 @@
 package valuestreams;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.ZoneId;
@@ -9,8 +11,6 @@ import java.util.Objects;
 import java.util.function.Function;
 
 public class DateValue extends AbstractValue<Date> {
-    private LocalDate localDate;
-
     private DateValue(Date value) {
         super(value);
     }
@@ -28,6 +28,15 @@ public class DateValue extends AbstractValue<Date> {
 
     public static DateValue of(int day, Month month, int year) {
         return new DateValue(new GregorianCalendar(year, month.getValue(), day).getTime());
+    }
+
+    public static DateValue of(String dateString, String format) {
+        SimpleDateFormat formatter = new SimpleDateFormat(format);
+        try {
+            return new DateValue(formatter.parse(dateString));
+        } catch (ParseException e) {
+            return DateValue.empty();
+        }
     }
 
     public static DateValue empty() {
@@ -76,5 +85,13 @@ public class DateValue extends AbstractValue<Date> {
 
     public DateValue onDay(int monthDay) {
         return validate(d -> getLocalDate(d).getDayOfMonth() == monthDay);
+    }
+
+    public DateValue past() {
+        return isBefore(new Date());
+    }
+
+    public DateValue future() {
+        return isAfter(new Date());
     }
 }
