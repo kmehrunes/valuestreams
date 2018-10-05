@@ -2,7 +2,6 @@ package valuestreams.pipeline;
 
 import valuestreams.Value;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -14,39 +13,94 @@ public class Pipeline<I, O> {
 
     private Pipeline() {}
 
+    /**
+     * Initializes a pipeline with the given input class type.
+     * The created pipeline does not perform any transformation
+     * on the value and just returns it, and its output type
+     * is the same as its input type.
+     * @param inputType The class of the input value
+     * @param <T> The type of the input value (inferred from the
+     *           class parameter)
+     * @return A new pipeline
+     * {@code Pipeline.input(String.class);}
+     */
     public static <T> Pipeline<T, T> input(Class<T> inputType) {
-        Pipeline<T, T> chain = new Pipeline<>();
-        chain.operations = Collections.singletonList(new IdentityOperation<T>());
-        return chain;
+        Pipeline<T, T> pipeline = new Pipeline<>();
+        pipeline.operations = Collections.singletonList(new IdentityOperation<T>());
+        return pipeline;
     }
 
+    /**
+     * Initializes a pipeline, but the type must be specified
+     * explicitly in the function call. The created pipeline
+     * does not perform any transformation on the value and
+     * just returns it, and its output type is the same as
+     * its input type.
+     * @param <T> The type of the input value
+     * @return A new pipeline
+     * {@code Pipeline.<String>input()}
+     */
     public static <T> Pipeline<T, T> input() {
-        Pipeline<T, T> chain = new Pipeline<>();
-        chain.operations = Collections.singletonList(new IdentityOperation<T>());
-        return chain;
+        Pipeline<T, T> pipeline = new Pipeline<>();
+        pipeline.operations = Collections.singletonList(new IdentityOperation<T>());
+        return pipeline;
     }
 
+    /**
+     * Initializes a pipeline with a starting operation.
+     * @param operation The first operation of the pipeline
+     * @param <T> The input type of the pipeline
+     * @param <R> The output type of the pipeline
+     * @return A new pipeline
+     * {@code Pipeline.input(new MappingOperation<String, Integer>(Integer::valueOf));}
+     */
     public static <T, R> Pipeline<T, R> input(Operation<T, R> operation) {
-        Pipeline<T, R> chain = new Pipeline<>();
-        chain.operations = Collections.singletonList(operation);
-        return chain;
+        Pipeline<T, R> pipeline = new Pipeline<>();
+        pipeline.operations = Collections.singletonList(operation);
+        return pipeline;
     }
 
-    public <R> Pipeline<I, R> chain(Operation<O, R> pipe) {
+    /**
+     * Creates a new pipeline which contains the operations
+     * of the previous pipeline with the given operation
+     * chained to the end.
+     * @param operation The operation to append to the pipeline
+     * @param <R> The return type of the operation
+     * @return A new extended pipeline
+     */
+    public <R> Pipeline<I, R> chain(Operation<O, R> operation) {
         Pipeline<I, R> extendedPipeline = new Pipeline<>();
         extendedPipeline.operations = new ArrayList<>(operations);
-        extendedPipeline.operations.add(pipe);
+        extendedPipeline.operations.add(operation);
         return extendedPipeline;
     }
 
+    /**
+     * Chains a map operation to the pipeline.
+     * @param mapper The map function
+     * @param <R> The return type of the operation
+     * @return A new extended pipeline
+     */
     public <R> Pipeline<I, R> map(Function<O, R> mapper) {
         return chain(new MapOperation<>(mapper));
     }
 
+    /**
+     * Chains a validate operation to the pipeline.
+     * @param validator The validation predicate
+     * @return A new extended pipeline
+     */
     public Pipeline<I, O> validate(Predicate<O> validator) {
         return chain(new ValidateOperation<>(validator));
     }
 
+    /**
+     * Applies the pipeline on an input.
+     * @param input The input value
+     * @return A Value object which contains the final
+     * value of the pipeline if everything succeeded, or
+     * an empty one otherwise.
+     */
     @SuppressWarnings({"rawtypes", "unchecked"})
     public Value<O> apply(I input) {
         Object source = input;
