@@ -8,6 +8,11 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+/*
+ * This implementation follows the example given in
+ * https://stackoverflow.com/a/8681806
+ */
+
 public class Pipeline<I, O> {
     private List<Operation<?, ?>> operations;
 
