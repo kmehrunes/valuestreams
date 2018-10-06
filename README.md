@@ -67,6 +67,29 @@ Pipeline<String, String> pipeline = Pipeline.input(String.class);
 Pipeline<String, String> pipeline = Pipeline.input(new IdentityOperation());
 ```
 
+### Chaining Operations to a Pipeline
+Once a pipeline is created operations can be chained to it. You can chain a mapping operation using `map()`, a validation operation using `validate()`, or whatever kind of operation you wish to define using `chain()`.
+```java
+Pipeline.input(String.class)
+	.map(Decoders::decodeBase64ToString)
+	.validate(str -> str.length() > 10)
+	.chain(new CustomOperation());
+```
+In this example we created a pipeline which accepts a string as its input, decodes it, checks the length, and then applies a custom operation on it.
+
+### Extending a Pipeline
+Pipelines are immutable; every chain operation creates a new pipeline which contains the previous operations and the new one added to them without modifying the original pipeline. We can make use of this to create a base pipeline and extending it for different causes.
+```java
+Pipeline<String, String> emailPipeline = Pipeline.input(String.class)
+	.validate(Email::isValid);
+	
+Pipeline<String, String> sendEmailPipeline = emailPipeline.map(Email::sendTo);
+Pipeline<String, ServiceResponse> updateUserEmailPipeline = emailPipeline.chain(usersService::updateUserEmail);
+```
+
+### Applying a Pipeline
+A pipeline can be applied simply when `apply()` is called. `apply()` takes as an argument a value of the same type as the input type of the pipeline, and runs all operations on it in the sequence they are defined. It returns the final result as a value stream of the output type (`Value<O>`).
+
 ## Examples
 - Generic values
 ```java
