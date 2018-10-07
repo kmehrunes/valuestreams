@@ -27,7 +27,7 @@ A: It's more convenient than performing those tasks manually, provides more decl
         <dependency>
 	    <groupId>com.github.kmehrunes</groupId>
 	    <artifactId>valuestreams</artifactId>
-	    <version>v0.1</version>
+	    <version>v0.2</version>
 	</dependency>
 </dependencies>
 ```
