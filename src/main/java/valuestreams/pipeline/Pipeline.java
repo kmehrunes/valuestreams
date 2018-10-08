@@ -5,6 +5,7 @@ import valuestreams.Value;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -121,5 +122,9 @@ public class Pipeline<I, O> {
         }
 
         return target != null ? Value.of((O) target) : Value.empty();
+    }
+
+    public CompletableFuture<Value<O>> applyAsync(I input) {
+        return CompletableFuture.supplyAsync(() -> apply(input));
     }
 }
