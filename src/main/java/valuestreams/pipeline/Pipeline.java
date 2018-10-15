@@ -82,6 +82,18 @@ public class Pipeline<I, O> {
     }
 
     /**
+     * Does the same job as chain(Operation) but requires the
+     * operation to be of type CheckedOperation. This is just
+     * a safety function to enforce type checking.
+     * @param operation The operation to append to the pipeline
+     * @param <R> The return type of the operation
+     * @return A new extended pipeline
+     */
+    public <R> Pipeline<I, R> chainWithException(CheckedOperation<O, R> operation) {
+        return chain(operation);
+    }
+
+    /**
      * Chains a map operation to the pipeline.
      * @param mapper The map function
      * @param <R> The return type of the operation
@@ -92,12 +104,33 @@ public class Pipeline<I, O> {
     }
 
     /**
+     * Chains a map operation which throws an exception
+     * to the pipeline.
+     * @param mapper The map function
+     * @param <R> The return type of the operation
+     * @return A new extended pipeline
+     */
+    public <R> Pipeline<I, R> mapWithException(CheckedFunction<O, R> mapper) {
+        return chainWithException(new CheckedMapOperation<>(mapper));
+    }
+
+    /**
      * Chains a validate operation to the pipeline.
      * @param validator The validation predicate
      * @return A new extended pipeline
      */
     public Pipeline<I, O> validate(Predicate<O> validator) {
         return chain(new ValidateOperation<>(validator));
+    }
+
+    /**
+     * Chains a validate operation which throws an exception
+     * to the pipeline.
+     * @param validator The validation predicate
+     * @return A new extended pipeline
+     */
+    public Pipeline<I, O> validateWithException(Predicate<O> validator) {
+        return chainWithException(new CheckedValidateOperation<>(validator));
     }
 
     /**
