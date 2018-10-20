@@ -1,11 +1,9 @@
 package valuestreams.pipeline;
 
-import java.util.function.Predicate;
-
 public class CheckedValidateOperation<T> implements CheckedOperation<T, T> {
-    private final Predicate<T> validator;
+    private final CheckedPredicate<T> validator;
 
-    public CheckedValidateOperation(Predicate<T> validator) {
+    public CheckedValidateOperation(CheckedPredicate<T> validator) {
         this.validator = validator;
     }
 

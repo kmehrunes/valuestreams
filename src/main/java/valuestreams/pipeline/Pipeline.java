@@ -129,7 +129,7 @@ public class Pipeline<I, O> {
      * @param validator The validation predicate
      * @return A new extended pipeline
      */
-    public Pipeline<I, O> validateWithException(Predicate<O> validator) {
+    public Pipeline<I, O> validateWithException(CheckedPredicate<O> validator) {
         return chainWithException(new CheckedValidateOperation<>(validator));
     }
 
