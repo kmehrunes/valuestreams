@@ -42,4 +42,24 @@ public class PipelineTests {
 
         assertTrue(squared.getNullable().intValue() != cubed.getNullable().intValue());
     }
+
+    static int mapException(String str) throws IOException {
+        throw new IOException("Can't map this.");
+    }
+
+    static boolean validateException(String str) throws IOException {
+        throw new IOException("Can't validate this");
+    }
+
+    @Test
+    void exceptionsPipeline() {
+        Pipeline<String, Integer> mapPipeline = Pipeline.input(String.class)
+                .mapWithException(PipelineTests::mapException);
+
+        Pipeline<String, String> validatePipeline = Pipeline.input(String.class)
+                .validateWithException(PipelineTests::validateException);
+
+        assertFalse(mapPipeline.apply("").isPresent());
+        assertFalse(validatePipeline.apply("").isPresent());
+    }
 }
