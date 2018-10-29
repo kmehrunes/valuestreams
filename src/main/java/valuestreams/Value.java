@@ -1,5 +1,8 @@
 package valuestreams;
 
+import valuestreams.functions.CheckedFunction;
+import valuestreams.functions.CheckedPredicate;
+
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -37,7 +40,30 @@ public class Value<T> extends AbstractValue<T> {
 
         if (!isEmpty()) {
             if (!validator.test(value)) {
-                value = null;
+                this.value = null;
+            }
+        }
+
+        return this;
+    }
+
+    /**
+     * Applies a predicate on the value, and empties
+     * it if the predicate returned false.
+     * @param validator A predicate whose type matches
+     *                  that of the value.
+     * @return The same instance.
+     */
+    public Value<T> validateWithException(CheckedPredicate<T> validator) {
+        Objects.requireNonNull(validator);
+
+        if (!isEmpty()) {
+            try {
+                if (!validator.test(value)) {
+                    this.value = null;
+                }
+            } catch (Exception ex) {
+                this.value = null;
             }
         }
 
@@ -54,6 +80,22 @@ public class Value<T> extends AbstractValue<T> {
     public <R> Value<R> map(Function<T, R> mapper) {
         Objects.requireNonNull(mapper);
         return isEmpty() ? Value.empty() : Value.of(mapper.apply(this.value));
+    }
+
+    /**
+     * Applies a mapper on the value.
+     * @param mapper The mapper to applied.
+     * @param <R> The return type of the mapper.
+     * @return A new instance which contains the
+     * mapped value.
+     */
+    public <R> Value<R> mapWithException(CheckedFunction<T, R> mapper) {
+        Objects.requireNonNull(mapper);
+        try {
+            return isEmpty() ? Value.empty() : Value.of(mapper.apply(this.value));
+        } catch (Exception ex) {
+            return Value.empty();
+        }
     }
 
     /**
