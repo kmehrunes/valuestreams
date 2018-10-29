@@ -1,6 +1,8 @@
 package valuestreams.pipeline;
 
 import valuestreams.Value;
+import valuestreams.functions.CheckedFunction;
+import valuestreams.functions.CheckedPredicate;
 
 import java.util.ArrayList;
 import java.util.Collections;

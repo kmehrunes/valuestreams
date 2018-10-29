@@ -1,4 +1,4 @@
-package valuestreams.pipeline;
+package valuestreams.functions;
 
 @FunctionalInterface
 public interface CheckedFunction<T, R> {
