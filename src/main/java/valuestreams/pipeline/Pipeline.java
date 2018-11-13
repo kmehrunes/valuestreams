@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 /*
  * This implementation follows the example given in
@@ -136,7 +137,7 @@ public class Pipeline<I, O> {
     }
 
     /**
-     * Applies the pipeline on an input.
+     * Applies the pipeline on a single input.
      * @param input The input value
      * @return A Value object which contains the final
      * value of the pipeline if everything succeeded, or
@@ -165,5 +166,27 @@ public class Pipeline<I, O> {
 
     public CompletableFuture<Value<O>> applyAsync(I input) {
         return CompletableFuture.supplyAsync(() -> apply(input));
+    }
+
+    /**
+     * Applies the pipeline on a stream of input of
+     * values.
+     * @param input The input stream
+     * @return A stream of the results from applying
+     * the pipeline on each input value.
+     */
+    public Stream<Value<O>> applyStream(Stream<I> input) {
+        return input.map(this::apply);
+    }
+
+    /**
+     * Applies the pipeline on a stream of input of
+     * values but filters out undefined results.
+     * @param input The input stream
+     * @return A stream of the results from applying
+     * the pipeline on each input value.
+     */
+    public Stream<O> applyStreamAndFilter(Stream<I> input) {
+        return input.map(this::apply).filter(Value::isPresent).map(Value::getNullable);
     }
 }

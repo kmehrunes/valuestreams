@@ -3,6 +3,7 @@ import valuestreams.Value;
 import valuestreams.pipeline.Pipeline;
 
 import java.io.IOException;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -61,5 +62,31 @@ public class PipelineTests {
 
         assertFalse(mapPipeline.apply("").isPresent());
         assertFalse(validatePipeline.apply("").isPresent());
+    }
+
+    @Test
+    void staticStreamPipeline() {
+        Pipeline<String, String> pipeline = Pipeline.input(String.class)
+                .map(Integer::valueOf)
+                .validate(i -> i > 10)
+                .map(Object::toString);
+
+        Stream<String> inputStream = Stream.<String>builder().add("12").add("b").add("20").build();
+        assertEquals(3, pipeline.applyStream(inputStream).count());
+
+        inputStream = Stream.<String>builder().add("12").add("b").add("20").build();
+        assertEquals(2, pipeline.applyStreamAndFilter(inputStream).count());
+    }
+
+    @Test
+    void infiniteStreamPipeline() {
+        Pipeline<Integer, String> pipeline = Pipeline.input(Integer.class)
+                .validate(i -> i > 10)
+                .map(Object::toString);
+
+        Stream<Integer> inputStream = Stream.generate(() -> (int)((Math.random() * 20) + 8)).limit(10);
+        Stream<Value<String>> outputStream = pipeline.applyStream(inputStream);
+
+        assertEquals(10, outputStream.count());
     }
 }
