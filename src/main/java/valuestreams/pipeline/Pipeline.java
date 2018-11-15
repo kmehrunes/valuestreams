@@ -97,43 +97,43 @@ public class Pipeline<I, O> {
     }
 
     /**
-     * Chains a map operation to the pipeline.
-     * @param mapper The map function
+     * Chains a pipe operation to the pipeline.
+     * @param mapper The pipe function
      * @param <R> The return type of the operation
      * @return A new extended pipeline
      */
-    public <R> Pipeline<I, R> map(Function<O, R> mapper) {
-        return chain(new MapOperation<>(mapper));
+    public <R> Pipeline<I, R> pipe(Function<O, R> mapper) {
+        return chain(new Pipe<>(mapper));
     }
 
     /**
-     * Chains a map operation which throws an exception
+     * Chains a pipe operation which throws an exception
      * to the pipeline.
-     * @param mapper The map function
+     * @param mapper The pipe function
      * @param <R> The return type of the operation
      * @return A new extended pipeline
      */
-    public <R> Pipeline<I, R> mapWithException(CheckedFunction<O, R> mapper) {
-        return chainWithException(new CheckedMapOperation<>(mapper));
+    public <R> Pipeline<I, R> pipeWithException(CheckedFunction<O, R> mapper) {
+        return chainWithException(new CheckedPipe<>(mapper));
     }
 
     /**
-     * Chains a validate operation to the pipeline.
+     * Chains a filter operation to the pipeline.
      * @param validator The validation predicate
      * @return A new extended pipeline
      */
-    public Pipeline<I, O> validate(Predicate<O> validator) {
-        return chain(new ValidateOperation<>(validator));
+    public Pipeline<I, O> filter(Predicate<O> validator) {
+        return chain(new Filter<>(validator));
     }
 
     /**
-     * Chains a validate operation which throws an exception
+     * Chains a filter operation which throws an exception
      * to the pipeline.
      * @param validator The validation predicate
      * @return A new extended pipeline
      */
-    public Pipeline<I, O> validateWithException(CheckedPredicate<O> validator) {
-        return chainWithException(new CheckedValidateOperation<>(validator));
+    public Pipeline<I, O> filterWithException(CheckedPredicate<O> validator) {
+        return chainWithException(new CheckedFilter<>(validator));
     }
 
     /**

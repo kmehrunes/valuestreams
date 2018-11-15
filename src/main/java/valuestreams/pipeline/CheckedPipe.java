@@ -2,16 +2,16 @@ package valuestreams.pipeline;
 
 import valuestreams.functions.CheckedFunction;
 
-public class CheckedMapOperation<T, R> implements CheckedOperation<T, R> {
+public class CheckedPipe<T, R> implements CheckedOperation<T, R> {
     private CheckedFunction<T, R> mapper;
 
-    public CheckedMapOperation(CheckedFunction<T, R> mapper) {
+    public CheckedPipe(CheckedFunction<T, R> mapper) {
         this.mapper = mapper;
     }
 
     @Override
     public OperationType getType() {
-        return OperationType.MAP;
+        return OperationType.PIPE;
     }
 
     @Override

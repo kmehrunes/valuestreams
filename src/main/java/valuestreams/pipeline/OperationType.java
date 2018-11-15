@@ -1,7 +1,7 @@
 package valuestreams.pipeline;
 
 public enum OperationType {
-    MAP,
-    VALIDATE,
+    PIPE,
+    FILTER,
     IDENTITY
 }

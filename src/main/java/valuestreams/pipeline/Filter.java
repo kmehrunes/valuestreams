@@ -2,16 +2,16 @@ package valuestreams.pipeline;
 
 import java.util.function.Predicate;
 
-public class ValidateOperation<T> implements Operation<T, T> {
+public class Filter<T> implements Operation<T, T> {
     private final Predicate<T> validator;
 
-    public ValidateOperation(Predicate<T> validator) {
+    public Filter(Predicate<T> validator) {
         this.validator = validator;
     }
 
     @Override
     public OperationType getType() {
-        return OperationType.VALIDATE;
+        return OperationType.FILTER;
     }
 
     @Override

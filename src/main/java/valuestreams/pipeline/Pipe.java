@@ -2,16 +2,16 @@ package valuestreams.pipeline;
 
 import java.util.function.Function;
 
-public class MapOperation<T, R> implements Operation<T, R> {
+public class Pipe<T, R> implements Operation<T, R> {
     private final Function<T, R> mapper;
 
-    public MapOperation(Function<T, R> mapper) {
+    public Pipe(Function<T, R> mapper) {
         this.mapper = mapper;
     }
 
     @Override
     public OperationType getType() {
-        return OperationType.MAP;
+        return OperationType.PIPE;
     }
 
     @Override
