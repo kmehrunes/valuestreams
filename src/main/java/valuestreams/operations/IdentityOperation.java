@@ -1,4 +1,4 @@
-package valuestreams.pipeline;
+package valuestreams.operations;
 
 public class IdentityOperation<T> implements Operation<T, T> {
 

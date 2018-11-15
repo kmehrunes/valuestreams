@@ -1,6 +1,8 @@
 package valuestreams.pipeline;
 
 import valuestreams.functions.CheckedFunction;
+import valuestreams.operations.CheckedOperation;
+import valuestreams.operations.OperationType;
 
 public class CheckedPipe<T, R> implements CheckedOperation<T, R> {
     private CheckedFunction<T, R> mapper;

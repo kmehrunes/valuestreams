@@ -1,5 +1,8 @@
 package valuestreams.pipeline;
 
+import valuestreams.operations.Operation;
+import valuestreams.operations.OperationType;
+
 import java.util.function.Predicate;
 
 public class Filter<T> implements Operation<T, T> {

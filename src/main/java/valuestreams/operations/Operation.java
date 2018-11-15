@@ -1,4 +1,4 @@
-package valuestreams.pipeline;
+package valuestreams.operations;
 
 public interface Operation<T, R> {
     OperationType getType();

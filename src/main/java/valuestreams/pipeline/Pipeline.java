@@ -3,6 +3,9 @@ package valuestreams.pipeline;
 import valuestreams.Value;
 import valuestreams.functions.CheckedFunction;
 import valuestreams.functions.CheckedPredicate;
+import valuestreams.operations.CheckedOperation;
+import valuestreams.operations.IdentityOperation;
+import valuestreams.operations.Operation;
 
 import java.util.ArrayList;
 import java.util.Collections;

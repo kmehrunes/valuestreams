@@ -1,6 +1,8 @@
 package valuestreams.pipeline;
 
 import valuestreams.functions.CheckedPredicate;
+import valuestreams.operations.CheckedOperation;
+import valuestreams.operations.OperationType;
 
 public class CheckedFilter<T> implements CheckedOperation<T, T> {
     private final CheckedPredicate<T> validator;
