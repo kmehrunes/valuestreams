@@ -15,6 +15,7 @@ A: IDK, couldn't think of a better name.
 A: It's more convenient than performing those tasks manually, provides more declarative functionality, and makes the code more concise and easier to read. Also unlike `Optional`, those implementations don't create a new instance with every operation; pretty much everything is done in-place.
 
 ## Dependency
+**Note: the version below is lacking behind the code a bit**
 ```xml
 <repositories>
         <repository>
@@ -48,6 +49,8 @@ Just like optionals, creating an value instance must be done by using the functi
 ### Validation and Mapping
 The two main operations on values are validation and mapping. The former takes a predicate which verifies that the value conforms to a rule, while the latter tranforms the value. Specialized classes (e.g. `IntegerValue`) offer two types of mapping: normal one which must match the type of the value and is performed in-place, and a casting map which changes the type of the value and will result in another object containing the new value.
 
+For validation and mapping with functions which may throw an exception use `validateWithException()` and `mapWithException()`.
+
 ### Getting Results
 After you are done with processing a value, you can retrieve it using mulitple options:
 - **getOrThrow**: returns the value or throws an exception (you decide what exception to throw)
@@ -56,6 +59,8 @@ After you are done with processing a value, you can retrieve it using mulitple o
 
 ## Pipeline Overview
 Besides direct value streams, the library also supports processing pipeline. A pipeline is a pre-defined sequence of valiation and mapping operations to be applied on an input value. It also allows you to create a base pipeline and extend it multiple times.
+
+**Note: for consistency with the pipe-and-filter pattern, map operations are referred to as 'pipe' while validation operations are referred to as 'filter'.**
 
 ### Creating a Pipeline
 A pipeline must be created with an input and output types specified, and there are three ways one can create a new pipeline. 
@@ -68,27 +73,31 @@ Pipeline<String, String> pipeline = Pipeline.input(new IdentityOperation());
 ```
 
 ### Chaining Operations to a Pipeline
-Once a pipeline is created operations can be chained to it. You can chain a mapping operation using `map()`, a validation operation using `validate()`, or whatever kind of operation you wish to define using `chain()`.
+Once a pipeline is created operations can be chained to it. You can chain a mapping operation using `pipe()`, a validation operation using `filter()`, or whatever kind of operation you wish to define using `chain()`.
 ```java
 Pipeline.input(String.class)
-	.map(Decoders::decodeBase64ToString)
-	.validate(str -> str.length() > 10)
+	.pipe(Decoders::decodeBase64ToString)
+	.filter(str -> str.length() > 10)
 	.chain(new CustomOperation());
 ```
 In this example we created a pipeline which accepts a string as its input, decodes it, checks the length, and then applies a custom operation on it.
+
+Just like values, you can use `validateWithException()` or `mapWithException()` for validation and mapping with functions which may throw exceptions.
 
 ### Extending a Pipeline
 Pipelines are immutable; every chain operation creates a new pipeline which contains the previous operations and the new one added to them without modifying the original pipeline. We can make use of this to create a base pipeline and extending it for different causes.
 ```java
 Pipeline<String, String> emailPipeline = Pipeline.input(String.class)
-	.validate(Email::isValid);
+	.filter(Email::isValid);
 	
-Pipeline<String, String> sendEmailPipeline = emailPipeline.map(Email::sendTo);
+Pipeline<String, String> sendEmailPipeline = emailPipeline.pipe(Email::sendTo);
 Pipeline<String, ServiceResponse> updateUserEmailPipeline = emailPipeline.chain(usersService::updateUserEmail);
 ```
 
 ### Applying a Pipeline
-A pipeline can be applied simply when `apply()` is called. `apply()` takes as an argument a value of the same type as the input type of the pipeline, and runs all operations on it in the sequence they are defined. It returns the final result as a value stream of the output type (`Value<O>`).
+A pipeline can be applied simply when `apply()` is called. `apply()` takes as an argument a value of the same type as the input type of the pipeline, and runs all operations on it in the sequence they are defined. It returns the final result as a value stream of the output type (`Value<O>`). You may also use `applyAsync()` to get a `CompleteableFuture` of the result for operations which may take a long time to finish.
+
+Another option is to apply a pipeline on a stream of data. This is done by calling `applyStream()` which takes a stream of input values and outputs a stream of output values. If you want to filter out empty values you can use `applyStreamAndFilter()` instead.
 
 ## Examples
 - Generic values
