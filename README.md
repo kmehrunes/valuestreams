@@ -12,10 +12,10 @@ A set of some optional-like value wrappers which provide more validation and map
 A: IDK, couldn't think of a better name.
 
 **Q: Why would I use a value stream?**
-A: It's more convenient than performing those tasks manually, provides more declarative functionality, and makes the code more concise and easier to read. Also unlike `Optional`, those implementations don't create a new instance with every operation; pretty much everything is done in-place.
+A: It's more convenient than performing those tasks manually, provides more declarative functionality, and makes the code more concise and easier to read. Also unlike `Optional`, those implementations (the sub-types) don't create a new instance with every operation; pretty much everything is done in-place, they support functions which throw checked exceptions, and you have generally more options for getting the values (one of which is throwing a custom exception if the value is empty).
 
 ## Dependency
-**Note: the version below is lacking behind the code a bit**
+**Note: the version below is lagging behind the code a bit**
 ```xml
 <repositories>
         <repository>
