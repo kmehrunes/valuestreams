@@ -12,11 +12,6 @@ public class CheckedPipe<T, R> implements CheckedOperation<T, R> {
     }
 
     @Override
-    public OperationType getType() {
-        return OperationType.PIPE;
-    }
-
-    @Override
     public R apply(T value) {
         try {
             return mapper.apply(value);

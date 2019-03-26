@@ -13,11 +13,6 @@ public class Filter<T> implements Operation<T, T> {
     }
 
     @Override
-    public OperationType getType() {
-        return OperationType.FILTER;
-    }
-
-    @Override
     public T apply(T value) {
         return validator.test(value) ? value : null;
     }

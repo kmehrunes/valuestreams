@@ -13,11 +13,6 @@ public class Pipe<T, R> implements Operation<T, R> {
     }
 
     @Override
-    public OperationType getType() {
-        return OperationType.PIPE;
-    }
-
-    @Override
     public R apply(T value) {
         return mapper.apply(value);
     }

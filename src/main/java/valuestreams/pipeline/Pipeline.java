@@ -3,8 +3,10 @@ package valuestreams.pipeline;
 import valuestreams.Value;
 import valuestreams.functions.CheckedFunction;
 import valuestreams.functions.CheckedPredicate;
+import valuestreams.functions.MultiArgsFunction;
 import valuestreams.operations.CheckedOperation;
 import valuestreams.operations.IdentityOperation;
+import valuestreams.operations.MultiArgOperation;
 import valuestreams.operations.Operation;
 
 import java.util.ArrayList;
@@ -85,6 +87,10 @@ public class Pipeline<I, O> {
         extendedPipeline.operations = new ArrayList<>(operations);
         extendedPipeline.operations.add(operation);
         return extendedPipeline;
+    }
+
+    public <I2, R> Pipeline<I, R> chain(MultiArgsFunction.TwoArgs<O, I2, R> function2, I2 arg2) {
+        return this.chain(MultiArgOperation.create(function2, arg2));
     }
 
     /**

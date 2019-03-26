@@ -12,11 +12,6 @@ public class CheckedFilter<T> implements CheckedOperation<T, T> {
     }
 
     @Override
-    public OperationType getType() {
-        return OperationType.FILTER;
-    }
-
-    @Override
     public T apply(T value) {
         try {
             return validator.test(value) ? value : null;

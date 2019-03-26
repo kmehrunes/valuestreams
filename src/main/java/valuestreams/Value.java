@@ -2,6 +2,7 @@ package valuestreams;
 
 import valuestreams.functions.CheckedFunction;
 import valuestreams.functions.CheckedPredicate;
+import valuestreams.functions.MultiArgsFunction;
 
 import java.util.Objects;
 import java.util.function.Function;
@@ -80,6 +81,68 @@ public class Value<T> extends AbstractValue<T> {
     public <R> Value<R> map(Function<T, R> mapper) {
         Objects.requireNonNull(mapper);
         return isEmpty() ? Value.empty() : Value.of(mapper.apply(this.value));
+    }
+
+    /**
+     * Applies a mapper on the value.
+     * @param mapper The mapper to applied.
+     * @param <R> The return type of the mapper.
+     * @return A new instance which contains the
+     * mapped value.
+     */
+    public <T2, R> Value<R> map(MultiArgsFunction.TwoArgs<T, T2, R> mapper, T2 arg2) {
+        Objects.requireNonNull(mapper);
+        return isEmpty() ? Value.empty() : Value.of(mapper.apply(this.value, arg2));
+    }
+
+    /**
+     * Applies a mapper on the value.
+     * @param mapper The mapper to applied.
+     * @param <R> The return type of the mapper.
+     * @return A new instance which contains the
+     * mapped value.
+     */
+    public <T2, T3, R> Value<R> map(MultiArgsFunction.ThreeArgs<T, T2, T3, R> mapper, T2 arg2, T3 arg3) {
+        Objects.requireNonNull(mapper);
+        return isEmpty() ? Value.empty() : Value.of(mapper.apply(this.value, arg2, arg3));
+    }
+
+    /**
+     * Applies a mapper on the value.
+     * @param mapper The mapper to applied.
+     * @param <R> The return type of the mapper.
+     * @return A new instance which contains the
+     * mapped value.
+     */
+    public <T2, T3, T4, R> Value<R> map(MultiArgsFunction.FourArgs<T, T2, T3, T4, R> mapper, T2 arg2, T3 arg3, T4 arg4) {
+        Objects.requireNonNull(mapper);
+        return isEmpty() ? Value.empty() : Value.of(mapper.apply(this.value, arg2, arg3, arg4));
+    }
+
+    /**
+     * Applies a mapper on the value.
+     * @param mapper The mapper to applied.
+     * @param <R> The return type of the mapper.
+     * @return A new instance which contains the
+     * mapped value.
+     */
+    public <T2, T3, T4, T5, R> Value<R> map(MultiArgsFunction.FiveArgs<T, T2, T3, T4, T5, R> mapper, T2 arg2, T3 arg3,
+                                            T4 arg4, T5 arg5) {
+        Objects.requireNonNull(mapper);
+        return isEmpty() ? Value.empty() : Value.of(mapper.apply(this.value, arg2, arg3, arg4, arg5));
+    }
+
+    /**
+     * Applies a mapper on the value.
+     * @param mapper The mapper to applied.
+     * @param <R> The return type of the mapper.
+     * @return A new instance which contains the
+     * mapped value.
+     */
+    public <T2, T3, T4, T5, T6, R> Value<R> map(MultiArgsFunction.SixArgs<T, T2, T3, T4, T5, T6, R> mapper, T2 arg2, T3 arg3,
+                                                T4 arg4, T5 arg5, T6 arg6) {
+        Objects.requireNonNull(mapper);
+        return isEmpty() ? Value.empty() : Value.of(mapper.apply(this.value, arg2, arg3, arg4, arg5, arg6));
     }
 
     /**

@@ -1,6 +1,6 @@
 package valuestreams.operations;
 
+@FunctionalInterface
 public interface Operation<T, R> {
-    OperationType getType();
     R apply(T value);
 }

@@ -1,5 +1,6 @@
 import org.junit.jupiter.api.Test;
 import valuestreams.Value;
+import valuestreams.functions.MultiArgsFunction;
 import valuestreams.pipeline.Pipeline;
 
 import java.io.IOException;
@@ -88,5 +89,28 @@ public class PipelineTests {
         Stream<Value<String>> outputStream = pipeline.applyStream(inputStream);
 
         assertEquals(10, outputStream.count());
+    }
+
+    @Test
+    void multiArgumentOperation() {
+        MultiArgsFunction.TwoArgs<String, String, Boolean> function = (s1, s2) -> {
+            if (s1 == null) {
+                return s2 == null;
+            }
+
+            return s1.equals(s2);
+        };
+
+        Pipeline<String, Boolean> pipeline = Pipeline.input(String.class)
+                .pipe(Integer::valueOf)
+                .filter(i -> i < 10)
+                .pipe(Object::toString)
+                .chain(function, "5");
+
+        Value<Boolean> not5 = pipeline.apply("2");
+        Value<Boolean> is5 = pipeline.apply("5");
+
+        assertFalse(not5.getNullable());
+        assertTrue(is5.getNullable());
     }
 }
